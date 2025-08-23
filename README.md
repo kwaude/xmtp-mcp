@@ -25,8 +25,8 @@ The easiest way to use the XMTP MCP Server is via npm:
 # Install globally to use as CLI tool
 npm install -g @kwaude/xmtp-mcp-server
 
-# Verify installation
-xmtp-mcp-server --version
+# Verify installation (shows server info)
+which xmtp-mcp-server
 ```
 
 **Alternative: Local Project Installation**
@@ -45,7 +45,7 @@ For development or customization:
 ```bash
 # Clone repository
 git clone https://github.com/kwaude/xmtp-mcp.git
-cd XMTPMCPServer
+cd xmtp-mcp
 
 # Install dependencies
 npm install
@@ -133,7 +133,7 @@ claude mcp add xmtp node ./node_modules/@kwaude/xmtp-mcp-server/dist/index.js
 #### From Source Build
 ```bash
 # If building from source
-claude mcp add xmtp node /path/to/XMTPMCPServer/dist/index.js
+claude mcp add xmtp node /path/to/xmtp-mcp/dist/index.js
 ```
 
 ### Manual Configuration (claude.json)
@@ -226,7 +226,7 @@ The server includes comprehensive error handling:
 ```bash
 # Clone and setup
 git clone https://github.com/kwaude/xmtp-mcp.git
-cd XMTPMCPServer
+cd xmtp-mcp
 
 # Install dependencies
 npm install
@@ -265,7 +265,7 @@ npm start
 
 ### Project Structure
 ```
-XMTPMCPServer/
+xmtp-mcp/
 ├── src/
 │   └── index.ts              # Main MCP server implementation
 ├── dist/                     # Compiled JavaScript output
@@ -299,8 +299,8 @@ XMTPMCPServer/
 npm pack
 npm install -g ./kwaude-xmtp-mcp-server-*.tgz
 
-# Test CLI command
-xmtp-mcp-server --version
+# Test CLI command (shows server info)
+which xmtp-mcp-server
 
 # Test with Claude Code
 claude mcp add test-xmtp xmtp-mcp-server
@@ -395,7 +395,13 @@ echo $PATH | grep npm
 
 # Add to PATH if missing (add to ~/.bashrc or ~/.zshrc)
 export PATH="$PATH:$(npm config get prefix)/bin"
+
+# Verify command is available
+which xmtp-mcp-server
 ```
+
+#### CLI shows server output instead of version
+This is expected behavior. The `xmtp-mcp-server` command starts the MCP server immediately and communicates via stdio. Use `which xmtp-mcp-server` or `npm list -g @kwaude/xmtp-mcp-server` to verify installation.
 
 ### Configuration Issues
 
