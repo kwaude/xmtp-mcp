@@ -255,32 +255,22 @@ class XMTPMCPServer {
         throw new Error("Private key required. Provide via parameter or WALLET_KEY env variable.");
       }
 
-      // Create proper EOA signer for XMTP
-      const account = privateKeyToAccount(privateKey as `0x${string}`);
-      const signer = {
-        type: "EOA" as const,
-        signMessage: async (message: string): Promise<Uint8Array> => {
-          const signature = await account.signMessage({ message });
-          return toBytes(signature);
-        },
-        getIdentifier: () => ({
-          identifier: account.address,
-          identifierKind: 0, // IdentifierKind.Ethereum
-        }),
-      };
+      // Use simpler ethers-compatible approach like the examples
+      const { Wallet } = await import('ethers');
+      const wallet = new Wallet(privateKey);
 
-      // Initialize XMTP client with proper signer
-      this.state.client = await Client.create(signer, {
+      // Initialize XMTP client with ethers wallet (like the examples)
+      this.state.client = await Client.create(wallet as any, {
         env: environment as "local" | "dev" | "production",
       });
 
-      this.state.walletAddress = account.address;
+      this.state.walletAddress = wallet.address;
 
       return {
         content: [
           {
             type: "text",
-            text: `Successfully connected to XMTP ${environment} network with address: ${account.address}`,
+            text: `Successfully connected to XMTP ${environment} network with address: ${wallet.address}`,
           },
         ],
       };

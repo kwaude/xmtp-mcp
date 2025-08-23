@@ -9,10 +9,10 @@ dist/
 build/
 *.tsbuildinfo
 
-# Environment variables
+# Environment variables - IMPORTANT: Only .env is ignored for security
+# .env.development and .env.example are tracked for development setup
 .env
 .env.local
-.env.development.local
 .env.test.local
 .env.production.local
 

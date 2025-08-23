@@ -176,6 +176,27 @@ node test-all-tools.js
 | `dev` | XMTP Testnet | `grpc.dev.xmtp.network:443` |
 | `local` | Local Development | `localhost:5556` |
 
+## Known Issues
+
+### canMessage API Bug
+
+**Status**: 🐛 Active Issue
+
+The XMTP Node SDK's `canMessage()` function currently returns `undefined` instead of proper boolean values, causing message sending to fail even with properly activated wallets.
+
+**Impact**: 
+- ✅ Wallet connection works
+- ✅ Message retrieval works  
+- ✅ Conversation listing works
+- ❌ Message sending blocked by validation
+
+**Workaround**: 
+1. Activate wallets via [xmtp.chat](https://xmtp.chat) 
+2. Use `.env.development` test wallets for development
+3. Message retrieval and conversation management work normally
+
+**Related**: This affects the XMTP Node SDK directly, not the MCP server implementation.
+
 ## Contributing
 
 1. Fork the repository
