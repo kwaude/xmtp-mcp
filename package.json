@@ -1,0 +1,41 @@
+{
+  "name": "xmtp-mcp-server",
+  "version": "0.1.0",
+  "description": "XMTP Model Context Protocol server for decentralized messaging",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "xmtp-mcp-server": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx --env-file .env src/index.ts",
+    "start": "node dist/index.js",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write src/**/*.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@xmtp/node-sdk": "^4.0.3",
+    "viem": "^2.22.17",
+    "uint8arrays": "^5.1.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.3",
+    "tsx": "^4.19.2",
+    "eslint": "^9.15.0",
+    "prettier": "^3.3.3"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "xmtp",
+    "mcp",
+    "messaging",
+    "decentralized",
+    "web3"
+  ]
+}
