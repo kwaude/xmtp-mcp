@@ -1,18 +1,29 @@
 {
-  "name": "xmtp-mcp-server",
-  "version": "0.1.0",
-  "description": "XMTP Model Context Protocol server for decentralized messaging",
+  "name": "@kwaude/xmtp-mcp-server",
+  "version": "1.0.0",
+  "description": "XMTP Model Context Protocol server for decentralized messaging with AI assistants",
   "type": "module",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "bin": {
     "xmtp-mcp-server": "dist/index.js"
   },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE",
+    ".env.example",
+    ".env.development"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsx --env-file .env src/index.ts",
     "start": "node dist/index.js",
     "lint": "eslint src --ext .ts",
-    "format": "prettier --write src/**/*.ts"
+    "format": "prettier --write src/**/*.ts",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
@@ -29,14 +40,40 @@
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   },
-  "engines": {
+  "peerDependencies": {
     "node": ">=20"
   },
+  "engines": {
+    "node": ">=20",
+    "npm": ">=9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kwaude/xmtp-mcp.git"
+  },
+  "homepage": "https://github.com/kwaude/xmtp-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/kwaude/xmtp-mcp/issues"
+  },
+  "author": {
+    "name": "kwaude",
+    "url": "https://github.com/kwaude"
+  },
+  "license": "MIT",
   "keywords": [
     "xmtp",
     "mcp",
     "messaging",
     "decentralized",
-    "web3"
-  ]
+    "web3",
+    "ai",
+    "assistant",
+    "claude",
+    "model-context-protocol",
+    "ethereum",
+    "blockchain"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

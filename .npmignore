@@ -1,0 +1,39 @@
+# Source files (only dist/ goes to npm)
+src/
+tsconfig.json
+
+# Development files
+.env
+*.log
+test-*
+.vscode/
+.idea/
+
+# Git files
+.git/
+.gitignore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Runtime files  
+*.pid
+*.seed
+*.pid.lock
+
+# Test coverage
+coverage/
+.nyc_output
+
+# XMTP runtime databases
+*.db3
+*.db3-shm
+*.db3-wal
+
+# Build artifacts we don't want in package
+*.tsbuildinfo
+
+# Documentation that's not needed in package
+docs/
+.github/

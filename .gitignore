@@ -4,7 +4,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Build outputs
+# Build outputs (excluded from git, but included in npm package via files array)
 dist/
 build/
 *.tsbuildinfo

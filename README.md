@@ -19,8 +19,20 @@ A Model Context Protocol server that enables AI agents to interact with the XMTP
 
 ### Installation
 
+#### Option 1: NPM Package (Recommended)
+
 ```bash
-git clone <repository-url>
+# Install globally to use as CLI tool
+npm install -g @kwaude/xmtp-mcp-server
+
+# Or install locally in your project  
+npm install @kwaude/xmtp-mcp-server
+```
+
+#### Option 2: From Source
+
+```bash
+git clone https://github.com/kwaude/xmtp-mcp.git
 cd xmtp-mcp-server
 npm install
 npm run build
@@ -54,6 +66,18 @@ npm run dev
 Add to your Claude Code MCP configuration:
 
 ### Command Line
+
+#### Using Global Installation
+```bash
+claude mcp add xmtp xmtp-mcp-server --env WALLET_KEY=your_key_here --env XMTP_ENV=production
+```
+
+#### Using Local Installation  
+```bash
+claude mcp add xmtp node /path/to/node_modules/@kwaude/xmtp-mcp-server/dist/index.js --env WALLET_KEY=your_key_here --env XMTP_ENV=production
+```
+
+#### From Source
 ```bash
 claude mcp add xmtp node /path/to/xmtp-mcp-server/dist/index.js --env WALLET_KEY=your_key_here --env XMTP_ENV=production
 ```
