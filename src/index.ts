@@ -8,7 +8,7 @@ import {
   ListToolsRequestSchema,
   ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import { Client, type Dm, type Group, type DecodedMessage } from "@xmtp/node-sdk";
+import { Client, type Dm, type Group, type DecodedMessage, type Identifier, type IdentifierKind } from "@xmtp/node-sdk";
 import { generatePrivateKey, privateKeyToAccount, type PrivateKeyAccount } from "viem/accounts";
 import { toBytes } from "viem";
 import * as dotenv from "dotenv";
@@ -255,22 +255,35 @@ class XMTPMCPServer {
         throw new Error("Private key required. Provide via parameter or WALLET_KEY env variable.");
       }
 
-      // Use simpler ethers-compatible approach like the examples
-      const { Wallet } = await import('ethers');
-      const wallet = new Wallet(privateKey);
+      // Create proper EOA signer for XMTP using viem account (exact same as working debug script)
+      const account = privateKeyToAccount(privateKey as `0x${string}`);
+      const signer = {
+        type: "EOA" as const,
+        signMessage: async (message: string) => {
+          const signature = await account.signMessage({ message });
+          return toBytes(signature);
+        },
+        getIdentifier: () => {
+          return {
+            identifier: account.address,
+            identifierKind: 0, // IdentifierKind.Ethereum
+          };
+        },
+        getChainId: () => BigInt(1), // Ethereum mainnet as bigint
+      };
 
-      // Initialize XMTP client with ethers wallet (like the examples)
-      this.state.client = await Client.create(wallet as any, {
+      // Initialize XMTP client with proper signer
+      this.state.client = await Client.create(signer, {
         env: environment as "local" | "dev" | "production",
       });
 
-      this.state.walletAddress = wallet.address;
+      this.state.walletAddress = account.address;
 
       return {
         content: [
           {
             type: "text",
-            text: `Successfully connected to XMTP ${environment} network with address: ${wallet.address}`,
+            text: `Successfully connected to XMTP ${environment} network with address: ${account.address}`,
           },
         ],
       };
@@ -293,9 +306,10 @@ class XMTPMCPServer {
         identifierKind: 0, // IdentifierKind.Ethereum
       };
       
-      // Check if we can message this address
+      // Check if we can message this address (try both original and lowercase)
       const canMessage = await this.state.client.canMessage([recipientIdentifier]);
-      if (!canMessage.get(recipient)) {
+      const canMessageResult = canMessage.get(recipient) || canMessage.get(recipient.toLowerCase());
+      if (!canMessageResult) {
         throw new Error(`Address ${recipient} is not on the XMTP network`);
       }
 

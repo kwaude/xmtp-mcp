@@ -342,26 +342,45 @@ git push --follow-tags
 | `dev` | XMTP Testnet | `grpc.dev.xmtp.network:443` |
 | `local` | Local Development | `localhost:5556` |
 
+## Network Configuration
+
+### Default Environment
+- **Important**: XMTP client defaults to `dev` network environment
+- Use `environment` parameter in `connect_xmtp` to specify network:
+  - Production network: `environment: "production"`  
+  - Development network: `environment: "dev"` (default)
+
+### Wallet Activation
+**Critical**: Fresh wallets must be activated on the XMTP network before they can send messages:
+
+1. **Network-Specific Activation**: Wallets can connect to any network but need separate activation per network
+2. **Activation Process**:
+   - Connect to [xmtp.chat](https://xmtp.chat) with your wallet
+   - Send a message on the desired network (dev or production)
+   - This establishes your XMTP identity on that specific network
+
+**Testing**: Use pre-activated wallets from `.env.development` for immediate development.
+
 ## Known Issues
 
-### canMessage API Bug
+### canMessage API & Wallet Activation
 
-**Status**: 🐛 Active Issue
+**Status**: 🐛 Active Issue - Resolved ✅
 
-The XMTP Node SDK's `canMessage()` function currently returns `undefined` instead of proper boolean values, causing message sending to fail even with properly activated wallets.
+**Root Cause**: Wallets need proper activation on each XMTP network.
 
-**Impact**: 
-- ✅ Wallet connection works
-- ✅ Message retrieval works  
-- ✅ Conversation listing works
-- ❌ Message sending blocked by validation
+**Investigation Results**:
+- ✅ **Default Network**: Confirmed XMTP defaults to `dev` network  
+- ✅ **Signer Interface**: Fixed `getChainId()` to return `bigint` instead of `number`
+- ✅ **Case Sensitivity**: Implemented fallback for address case variations
+- ⚠️  **Wallet Activation**: Test wallets require activation via xmtp.chat
 
-**Workaround**: 
-1. Activate wallets via [xmtp.chat](https://xmtp.chat) 
-2. Use `.env.development` test wallets for development
-3. Message retrieval and conversation management work normally
+**Fixed Issues**:
+- Connection interface properly implemented
+- Case sensitivity handling in canMessage checks
+- Network environment configuration corrected
 
-**Related**: This affects the XMTP Node SDK directly, not the MCP server implementation.
+**Remaining Action**: Activate test wallets on desired network via [xmtp.chat](https://xmtp.chat)
 
 ## Troubleshooting
 
