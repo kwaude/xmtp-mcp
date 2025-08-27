@@ -8,7 +8,7 @@ import {
   ListToolsRequestSchema,
   ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import { Client, type Dm, type Group, type DecodedMessage, type Identifier, type IdentifierKind } from "@xmtp/node-sdk";
+import { Client, type Dm, type Group, type DecodedMessage, type Identifier, type IdentifierKind, type Conversation } from "@xmtp/node-sdk";
 import { generatePrivateKey, privateKeyToAccount, type PrivateKeyAccount } from "viem/accounts";
 import { toBytes } from "viem";
 import * as dotenv from "dotenv";
@@ -246,6 +246,7 @@ class XMTPMCPServer {
     });
   }
 
+
   private async connectXMTP(args: any) {
     try {
       const privateKey = args.privateKey || process.env.WALLET_KEY;
@@ -313,11 +314,14 @@ class XMTPMCPServer {
         throw new Error(`Address ${recipient} is not on the XMTP network`);
       }
 
-      // Create DM conversation with identifier
+      // Create DM conversation with identifier (back to original method)  
       const conversation = await this.state.client.conversations.newDmWithIdentifier(recipientIdentifier);
       
       // Send message
       await conversation.send(message);
+      
+      // Sync to ensure message is propagated
+      await this.state.client.conversations.syncAll();
 
       return {
         content: [
@@ -340,12 +344,19 @@ class XMTPMCPServer {
     const { address, limit = 50 } = args;
 
     try {
-      // Create conversation with proper identifier
+      // Create conversation with proper identifier (back to original method)
       const addressIdentifier = {
         identifier: address,
         identifierKind: 0, // IdentifierKind.Ethereum
       };
       const conversation = await this.state.client.conversations.newDmWithIdentifier(addressIdentifier);
+      
+      // Sync conversations to ensure we get latest messages
+      await this.state.client.conversations.syncAll();
+      
+      // Add brief delay after sync
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       const messages = await conversation.messages({ limit });
 
       const messageList = messages.map((msg: DecodedMessage<any>) => ({
